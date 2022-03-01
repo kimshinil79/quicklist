@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "quicklist",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
