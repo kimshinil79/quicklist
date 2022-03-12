@@ -46,11 +46,37 @@ export class ChecklistService {
     })
   }
 
-  async removeChecklist(checklistId: string): Promise<void> {}
+  async removeChecklist(checklistId: string): Promise<void> {
+    this.checklists = this.checklists.filter((checklist) => 
+    checklist.id !== checklistId);
+    this.save()
+  }
 
-  async addItemChecklist(checklistId: string, title: string): Promise<void> {}
+  async addItemChecklist(checklistId: string, title: string):Promise<void> {
+    const newItem = {
+      id: Date.now().toString(),
+      title : title, 
+      checked : false,
+    };
 
-  removeItemFromChecklist(checklistId: string, itemId: string): void {}
+    this.checklists = this.checklists.map((checklist) => {
+      return checklist.id == checklistId 
+      ? {...checklist, items: [...checklist.items, newItem]}
+      : checklist;
+    });  
+
+    this.save();
+
+  }
+
+  removeItemFromChecklist(checklistId: string, itemId: string): void {
+    this.checklists = this.checklists.map((checklist) => {
+      return checklist.id === checklistId
+      ? { ...checklist, items:[...checklist.items.filter((item) =>
+        item.id !== itemId)]}
+      : checklist;
+    })
+  }
 
   updateItemInChecklist(checklistId: string, itemId: string, newTitle: string): void {}
 
