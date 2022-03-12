@@ -78,17 +78,69 @@ export class ChecklistService {
     })
   }
 
-  updateItemInChecklist(checklistId: string, itemId: string, newTitle: string): void {}
+  updateItemInChecklist(checklistId: string, itemId: string, newTitle: string): void {
+    this.checklists = this.checklists.map((checklist) => {
+      return checklist.id === checklistId
+      ? {
+        ...checklist, 
+        items: [
+          ...checklist.items.map((item) => 
+            item.id === itemId ? {...item, title: newTitle} : item),
+        ],
+      }
+      : checklist;
+    });
+    this.save();
+  }
 
-  setItemStatus(checklistId: string, itemId: string, checked: boolean): void {}
+  setItemStatus(checklistId: string, itemId: string, checked: boolean): void {
+    this.checklists = this.checklists.map((checklist) => {
+      return checklist.id === checklistId
+        ? {
+          ...checklist, 
+          items: [
+            ...checklist.items.map((item) =>
+              item.id === itemId ? {...item, checked: checked} : item),
+          ],
+        }
+        : checklist;
+    });
+    this.save();
+  }
 
-  resetItemStatusChecklist(checklistId: string): void {}
+  resetItemStatusChecklist(checklistId: string): void {
+    this.checklists = this.checklists.map((checklist) => {
+      return checklist.id == checklistId
+        ? {
+          ...checklist, 
+          items : [
+            ...checklist.items.map((item) => {
+              return {...item, checked: false};
+            }),
+          ],
+        }
+        :checklist;
+    });
+
+    this.save();
+  }
 
   save(): Promise<void> {
+    this.checklists$.next(this.checklists)
     return Promise.resolve();
   }
 
   generateSlug(title: string): string {
-    return "";
+    let slug = title.toLowerCase().replace(/\s+/g, "-");
+
+    const matchingSlugs = this.checklists.filter((checklist) => {
+      return checklist.id.substring(0, slug.length) === slug;
+    });
+
+    if (matchingSlugs.length > 0) {
+      slug = slug + Date.now().toString();
+    }
+
+    return slug;
   }
 }
