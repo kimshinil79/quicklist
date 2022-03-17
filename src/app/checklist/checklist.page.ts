@@ -41,14 +41,70 @@ export class ChecklistPage implements OnInit, OnDestroy {
     }
   }
 
-  async addItem(): Promise<void> {}
+  async addItem(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: "Add Item",
+      message: "Enter the name of the task for this checklist below:",
+      inputs : [
+        {
+          type: "text",
+          name: "name",
+        }
+      ],
+      buttons: [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Save",
+          handler: (data) => {
+            this.checklistService.addItemChecklist(this.checklist.id, data.name);
+          },
+        },
+      ],
+    });
 
-  async renameItem(item: ChecklistItem): Promise<void> {}
+    alert.present();
+  }
 
-  async removeItem(item: ChecklistItem): Promise<void> {}
+  async renameItem(item: ChecklistItem): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: "Rename Item",
+      message: "Enter the name of the task for this checklist below:",
+      inputs:[
+        {
+          type: "text",
+          name : "name"
+        },
+      ],
+      buttons: [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Save",
+          handler: (data) => {
+            this.checklistService.updateItemInChecklist(this.checklist.id, item.id, data.name);
+            this.slidingList.closeSlidingItems();
+          },
+        },
+      ],
+    });
 
-  toggleItem(item: ChecklistItem): void {}
+    alert.present();
+  }
 
-  restartList(): void {}
+  async removeItem(item: ChecklistItem): Promise<void> {
+    await this. slidingList.closeSlidingItems();
+    this.checklistService.removeItemFromChecklist(this.checklist.id, item.id)
+  }
+
+  toggleItem(item: ChecklistItem): void {
+    this.checklistService.setItemStatus(this.checklist.id, item.id, !item.checked)
+  }
+
+  restartList(): void {
+    this.checklistService.resetItemStatusChecklist(this.checklist.id);
+  }
 
 }

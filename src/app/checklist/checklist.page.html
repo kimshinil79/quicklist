@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar color="success">
-    <ion-title>CHECKLIST TITLE</ion-title>
+    <ion-title>{{ checklist.title }}</ion-title>
     <ion-buttons slot="start">
       <ion-back-button color="light" defaultHref="/checklist"></ion-back-button>
     </ion-buttons>
@@ -19,7 +19,7 @@
   <ion-list lines="none">
     <ion-item-sliding *ngFor="let item of checklist.items">
       <ion-item color="success">
-        <ion-label>ITEM TITLE</ion-label>
+        <ion-label>{{ item.title }}</ion-label>
         <ion-checkbox
           color="light"
           [checked]="item.checked"
