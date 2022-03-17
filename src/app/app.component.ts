@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar } from '@capacitor/status-bar';
+import { ChecklistService } from './services/checklist.service';
 
 
 @Component({
@@ -9,11 +10,13 @@ import { StatusBar } from '@capacitor/status-bar';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {
-    
+  constructor(private checklistService: ChecklistService) {
+    this.initializeApp();
   }
 
   async initializeApp() {
+    await this.checklistService.load();
+    
     SplashScreen.hide().catch((err) => {
       console.warn(err);
     });

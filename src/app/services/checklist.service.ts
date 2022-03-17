@@ -16,7 +16,15 @@ export class ChecklistService {
   constructor(private storage: Storage) { }
 
   async load(): Promise<void> {
-    return Promise.resolve();
+    if (!this.loaded) {
+      const checklist = await this.storage.get("checklists");
+      if (checklist !== null) {
+        this.checklists = checklist;
+        this.checklists$.next(this.checklists);
+      }
+
+      this.loaded = true;
+    }
   }
 
   getChecklists(): Observable<Checklist[]> {
@@ -127,7 +135,7 @@ export class ChecklistService {
 
   save(): Promise<void> {
     this.checklists$.next(this.checklists)
-    return Promise.resolve();
+    return this.storage.set("checklists", this.checklists)
   }
 
   generateSlug(title: string): string {

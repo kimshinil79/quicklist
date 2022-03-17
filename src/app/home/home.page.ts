@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { AlertController, IonContent, IonList, NavController } from '@ionic/angular';
 import { ChecklistService } from '../services/checklist.service';
 import { Checklist } from '../interfaces/checklist';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-home',
@@ -17,10 +18,18 @@ export class HomePage implements OnInit {
   constructor(
     private checklistService: ChecklistService,
     private alertCtrl: AlertController,
+    private storage: Storage,
     private navCtrl: NavController
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    const introPreviouslyShown = await this.storage.get("introShown");
+
+    if (introPreviouslyShown === null) {
+      this.storage.set("introShown", true);
+      this.navCtrl.navigateRoot("/intro");
+    }
+
     this.checklistService.getChecklists().subscribe((checklists) => {
       this.checklists = checklists;
     });
