@@ -23,13 +23,15 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    await this.storage.create();
+    /*
     const introPreviouslyShown = await this.storage.get("introShown");
 
     if (introPreviouslyShown === null) {
       this.storage.set("introShown", true);
       this.navCtrl.navigateRoot("/intro");
     }
-
+    */
     this.checklistService.getChecklists().subscribe((checklists) => {
       this.checklists = checklists;
     });
